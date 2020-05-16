@@ -10,6 +10,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Hola Mundo!");
         }
     }
 }
