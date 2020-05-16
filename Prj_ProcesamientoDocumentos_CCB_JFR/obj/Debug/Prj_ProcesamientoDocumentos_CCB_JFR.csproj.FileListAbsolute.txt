@@ -1,0 +1,6 @@
+C:\Users\carlo\source\repos\Prj_Programacion3\Prj_ProcesamientoDocumentos_CCB_JFR\bin\Debug\Prj_ProcesamientoDocumentos_CCB_JFR.exe.config
+C:\Users\carlo\source\repos\Prj_Programacion3\Prj_ProcesamientoDocumentos_CCB_JFR\bin\Debug\Prj_ProcesamientoDocumentos_CCB_JFR.exe
+C:\Users\carlo\source\repos\Prj_Programacion3\Prj_ProcesamientoDocumentos_CCB_JFR\bin\Debug\Prj_ProcesamientoDocumentos_CCB_JFR.pdb
+C:\Users\carlo\source\repos\Prj_Programacion3\Prj_ProcesamientoDocumentos_CCB_JFR\obj\Debug\Prj_ProcesamientoDocumentos_CCB_JFR.csprojAssemblyReference.cache
+C:\Users\carlo\source\repos\Prj_Programacion3\Prj_ProcesamientoDocumentos_CCB_JFR\obj\Debug\Prj_ProcesamientoDocumentos_CCB_JFR.exe
+C:\Users\carlo\source\repos\Prj_Programacion3\Prj_ProcesamientoDocumentos_CCB_JFR\obj\Debug\Prj_ProcesamientoDocumentos_CCB_JFR.pdb
