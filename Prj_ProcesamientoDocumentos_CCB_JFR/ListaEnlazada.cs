@@ -71,11 +71,12 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 Console.Write(" ->" + recorrido.Valor.Total_pagar);
                 Console.Write(" ->" + recorrido.Valor.Descuentos);
                 Console.Write(" ->" + recorrido.Valor.Total_liquidado);
-                Console.Write(" ->" + recorrido.Valor.Materia);
+                Console.Write(" ->" + recorrido.Valor.Materias);
                 Console.Write(" ->" + recorrido.Valor.Docentes);
                 Console.Write(" ->" + recorrido.Valor.Horario);
                 Console.Write(" ->" + recorrido.Valor.Tipo_graducacion);
                 Console.Write(" ->" + recorrido.Valor.Historia_academica);
+                Console.Write(" ->" + recorrido.Valor.Historico_notas);
                 Console.Write(" ->" + recorrido.Valor.Pago_derechos);
                 Console.Write(" ->" + recorrido.Valor.Celular);
                 Console.Write(" ->" + recorrido.Valor.Correo);
