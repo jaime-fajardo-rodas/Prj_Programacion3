@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prj_ProcesamientoDocumentos_CCB_JFR;
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
@@ -10,9 +11,23 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hola Mundo!");
-            ProcesarPilas obj = new ProcesarPilas();
-            obj.guardarArchivos();
+
+            //ArchivosCSV.GenerarXML();
+
+            Canonico c = new Canonico();
+
+            c.Tipo_documento = "Soli";
+            c.Edad = 29;
+            c.Forma_pago = "Efectivo";
+            c.Nombres = "Carlos";
+
+            Cola cola = new Cola();
+
+            cola.Encolar(c);
+
+            cola.imprimir();
+            Console.ReadLine();
+
         }
     }
 }
