@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Timers;
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
     public class ArchivosCSV
     {
-        Cola colaBaja = new Cola();
-        Cola colaMedia = new Cola();
-        Cola colaAlta = new Cola();
-        public void GenerarXML()
+        public static Cola colaBaja = new Cola();
+        public static Cola colaMedia = new Cola();
+        public static Cola colaAlta = new Cola();
+        public static void GenerarXML(Object source, ElapsedEventArgs e)
         {
 
             int contador = 0;
@@ -20,23 +18,15 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             string line;
 
             DirectoryInfo direcCSV = new DirectoryInfo("./../../Documentos/CarpetaComun/");
-            DirectoryInfo direcXML = new DirectoryInfo("./../../Documentos/CarpetaSeguimiento/");
-
-            Soli soli = null;
-            Solcanma solcanma = null;
-            Solgra solgra = null;
-            Solcrees solcrees = null;
-            Solmafi solmafi = null;
-            Solmaac solmaac = null;
-
-            
+            DirectoryInfo direcXML = new DirectoryInfo("./../../Documentos/CarpetaSeguimiento/");            
 
             string etiqueta = "";
 
             int namefiles = 0;
-
+            
             foreach (var fi in direcCSV.GetFiles())
             {
+                
                 List<string> array_cabecera = new List<string>();
 
                 List<string> array_informacion = new List<string>();
@@ -51,32 +41,26 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 if (A1)
                 {
                     etiqueta = "SOLI";
-                    soli = new Soli();
                 }
                 else if (A2)
                 {
                     etiqueta = "SOLCANMA";
-                    solcanma = new Solcanma();
                 }
                 else if (A3)
                 {
                     etiqueta = "SOLCREES";
-                    solcrees = new Solcrees();
                 }
                 else if (A4)
                 {
                     etiqueta = "SOLGRA";
-                    solgra = new Solgra();
                 }
                 else if (A5)
                 {
                     etiqueta = "SOLMAAC";
-                    solmaac = new Solmaac();
                 }
                 else if (A6)
                 {
                     etiqueta = "SOLMAFI";
-                    solmafi = new Solmafi();
                 }
 
                 string estructura = "<" + etiqueta + "> \n";
@@ -112,7 +96,6 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
                 Console.WriteLine(String.Join(",", array_cabecera));
                 Console.WriteLine(String.Join(",", array_informacion));
-                Console.ReadLine();
 
                 contador = 0;
                 file.Close();
@@ -156,15 +139,16 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                     System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAFI/" + namefiles + ".xml", estructura);
                 }
 
+                File.Delete(direcCSV.FullName + fi.Name);
+
                 encolarPrioridad(objetDocument);
 
                 estructura = null;
-
             }
 
         }
 
-        public Canonico objetoCanonico(int columnas, string[] lista, string etiqueta)
+        public static Canonico objetoCanonico(int columnas, string[] lista, string etiqueta)
         {
             Canonico canonico = new Canonico();
 
@@ -212,7 +196,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             }
             else if (etiqueta.Equals("SOLMAAC"))
             {
-                canonico.Materia = lista[6];
+                canonico.Materias = lista[6];
                 canonico.Docentes = lista[7];
                 canonico.Horario = lista[8];
             }
@@ -220,7 +204,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             return canonico;
         }
 
-        public void encolarPrioridad(Canonico canonico)
+        public static void encolarPrioridad(Canonico canonico)
         {
             string tipo_codumento = canonico.Tipo_documento;
 
@@ -237,12 +221,6 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 colaAlta.Encolar(canonico);
             }
 
-            Console.WriteLine("Cola de baja prioridad");
-            colaBaja.imprimir();
-            Console.WriteLine("Cola de media prioridad");
-            colaMedia.imprimir();
-            Console.WriteLine("Cola de alta prioridad");
-            colaAlta.imprimir();
         }
 
     }

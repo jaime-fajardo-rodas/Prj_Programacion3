@@ -1,71 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prj_ProcesamientoDocumentos_CCB_JFR;
+﻿using System.Threading;
 
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
     class Program
     {
-        public static Cola colaAlta;
-        public static Cola colaMedia;
-        public static Cola colaBaja;
+        static System.Timers.Timer procesoLectura;
+        static System.Timers.Timer procesoProcesar;
         static void Main(string[] args)
         {
-            //ArchivosCSV.GenerarXML(); 
 
-            colaAlta = new Cola();
-            
-            for (int i = 0; i < 5; i++)
-            {
-                Canonico cAlto = new Canonico();
-                cAlto.Tipo_documento = "SOLGRA";
-                cAlto.Edad = (29+i);
-                cAlto.Forma_pago = "Efectivo";
-                cAlto.Nombres = "Carlos_"+i;
-                
-                colaAlta.Encolar(cAlto);
-            }
+            Thread hiloLectura = new Thread(new ThreadStart(leerArchivos));
+            hiloLectura.Start();
+            Thread.Sleep(10000);
 
-            colaMedia = new Cola();
-            
-            for (int i = 0; i < 5; i++)
-            {
-                Canonico cMedio = new Canonico();
-                cMedio.Tipo_documento = "SOLI";
-                cMedio.Edad = (35+i);
-                cMedio.Forma_pago = "Efectivo";
-                cMedio.Nombres = "Jaime_"+i;
+            Thread hiloProcesar = new Thread(new ThreadStart(procesarArchivos));
+            hiloProcesar.Start();
+            Thread.Sleep(10000);          
 
-                colaMedia.Encolar(cMedio);
-            }
-
-            colaBaja = new Cola();
-            
-            for (int i = 0; i < 5; i++)
-            {
-                Canonico cBajo = new Canonico();
-                cBajo.Tipo_documento = "SOLMAAC";
-                cBajo.Edad = (55+i);
-                cBajo.Forma_pago = "Efectivo";
-                cBajo.Nombres = "David_"+i;
-
-                colaBaja.Encolar(cBajo);
-            }
-
-            
-            exeProcesamiento();
         }
 
-
-        public static void exeProcesamiento()
+        private static void leerArchivos()
         {
-            ProcesarPilas objProcesamiento = new ProcesarPilas(colaAlta,colaMedia,colaBaja);
-            objProcesamiento.ProcesarPilasPrioridades();
+            while (true)
+            {
+                procesoLectura = new System.Timers.Timer();
+                procesoLectura.Elapsed += ArchivosCSV.GenerarXML;
+                procesoLectura.AutoReset = true;
+                procesoLectura.Enabled = true;
+            }
+            
+        }
+
+        private static void procesarArchivos()
+        {
+            while (true)
+            {
+                procesoProcesar = new System.Timers.Timer();
+                procesoProcesar.Elapsed += ProcesarColas.ProcesarColasPrioridades;
+                procesoProcesar.AutoReset = true;
+                procesoProcesar.Enabled = true;
+            }
 
         }
+
     }
 }

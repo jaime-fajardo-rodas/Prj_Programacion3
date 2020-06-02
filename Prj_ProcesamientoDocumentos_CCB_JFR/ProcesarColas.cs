@@ -1,22 +1,22 @@
 ﻿using System;
 using System.IO;
+using System.Timers;
 
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
-    public class ProcesarPilas
+    public class ProcesarColas
     {
-        private Cola pilaAlta;
-        private Cola pilaMedia;
-        private Cola pilaBaja;
-        public ProcesarPilas(Cola pilaAlta, Cola pilaMedia, Cola pilaBaja)
+        private static Cola pilaAlta;
+        private static Cola pilaMedia;
+        private static Cola pilaBaja;
+       
+        public static void ProcesarColasPrioridades(Object source, ElapsedEventArgs e)
         {
-            this.pilaAlta = pilaAlta;
-            this.pilaMedia = pilaMedia;
-            this.pilaBaja = pilaBaja;
-        }
-        public void ProcesarPilasPrioridades()
-        {
+            pilaAlta = ArchivosCSV.colaAlta;
+            pilaMedia = ArchivosCSV.colaMedia;
+            pilaBaja = ArchivosCSV.colaBaja;
+
             /*cantidad de documentos a procesar segun cada prioridad*/
             int DocPrioridadAlta = 3;
             int DocPrioridadMedia = 2;
@@ -69,7 +69,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
         }
 
-        public void guardarArchivos(Canonico can)
+        public static void guardarArchivos(Canonico can)
         {
 
             String tipoDocumento = can.Tipo_documento;
@@ -116,7 +116,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
         }
 
-        public String generarXml(Canonico can)
+        public static String generarXml(Canonico can)
         {
 
             String texto =
@@ -155,7 +155,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             return texto;
         }
 
-        public String generarLog(String tipoDocumento, String fecha, String peso)
+        public static String generarLog(String tipoDocumento, String fecha, String peso)
         {
             String texto = "El tipo de documento del archivo es: " + tipoDocumento + "\n" +
                 "Se proceso en la fecha: " + fecha + "\n" +
@@ -165,7 +165,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
         }
 
-        public String pesoArchivo(String rutaDestino)
+        public static String pesoArchivo(String rutaDestino)
         {
             long peso = new FileInfo(rutaDestino).Length;
             String pesoArchivo = "";
