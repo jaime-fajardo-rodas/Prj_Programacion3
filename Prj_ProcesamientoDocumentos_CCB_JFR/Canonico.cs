@@ -22,7 +22,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         double total_pagar;
         double descuentos;
         double total_liquidado;
-        string materia;
+        string materias;
         string docentes;
         string horario;
         string tipo_graducacion;
@@ -57,11 +57,12 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         public double Total_pagar { get => total_pagar; set => total_pagar = value; }
         public double Descuentos { get => descuentos; set => descuentos = value; }
         public double Total_liquidado { get => total_liquidado; set => total_liquidado = value; }
-        public string Materia { get => materia; set => materia = value; }
+        public string Materias { get => materias; set => materias = value; }
         public string Docentes { get => docentes; set => docentes = value; }
         public string Horario { get => horario; set => horario = value; }
         public string Tipo_graducacion { get => tipo_graducacion; set => tipo_graducacion = value; }
         public string Historia_academica { get => historia_academica; set => historia_academica = value; }
+        public string Historico_notas { get => historico_notas; set => historico_notas = value; }
         public string Pago_derechos { get => pago_derechos; set => pago_derechos = value; }
         public long Celular { get => celular; set => celular = value; }
         public string Correo { get => correo; set => correo = value; }
@@ -71,7 +72,6 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         public string Jornada { get => jornada; set => jornada = value; }
         public string Sede { get => sede; set => sede = value; }
         public string Motivo_cancelacion { get => motivo_cancelacion; set => motivo_cancelacion = value; }
-        public string Historico_notas { get => historico_notas; set => historico_notas = value; }
 
         public override string ToString()
         {

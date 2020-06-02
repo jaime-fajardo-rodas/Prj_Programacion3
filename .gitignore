@@ -6,6 +6,9 @@
 *.exe
 *.o
 *.so
-*.sou
+*.suo
 *.xml
 *.csv
+*.pdb
+*.cache
+*.ide
