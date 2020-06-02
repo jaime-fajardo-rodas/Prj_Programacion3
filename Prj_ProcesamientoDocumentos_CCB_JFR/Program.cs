@@ -5,27 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Prj_ProcesamientoDocumentos_CCB_JFR;
 
+
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //ArchivosCSV.GenerarXML();
+            ArchivosCSV archivosCSV = new ArchivosCSV();
 
-            Canonico c = new Canonico();
+            archivosCSV.GenerarXML();
 
-            c.Tipo_documento = "Soli";
-            c.Edad = 29;
-            c.Forma_pago = "Efectivo";
-            c.Nombres = "Carlos";
-
-            Cola cola = new Cola();
-
-            cola.Encolar(c);
-
-            cola.imprimir();
             Console.ReadLine();
+
+            while (true)
+            {
+                Dosificador.simular();
+            }
+
         }
     }
 }

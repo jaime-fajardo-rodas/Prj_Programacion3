@@ -46,6 +46,7 @@
     <Compile Include="ArchivosCSV.cs" />
     <Compile Include="Canonico.cs" />
     <Compile Include="Cola.cs" />
+    <Compile Include="Dosificador.cs" />
     <Compile Include="ListaEnlazada.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
