@@ -142,7 +142,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 estructura = null;
 
                 var stopwatch = Stopwatch.StartNew();
-                Thread.Sleep(3000);
+                Thread.Sleep(1000);
                 stopwatch.Stop();
 
             }

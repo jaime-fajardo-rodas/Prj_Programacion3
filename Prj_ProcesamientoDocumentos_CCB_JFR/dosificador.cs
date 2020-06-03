@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO; //File
+using System.Threading;
 using System.Timers; //ElapsedEventArgs, Timer
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
@@ -17,18 +19,9 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         static List<string> lsSOLCREES = new List<string>();
         static List<string> lsSOLCANMA = new List<string>();
         static System.Timers.Timer tSimulador;
-        public static void simular()
-        {
-            datos();
+        
 
-            // Temporizador con intervalo de 1 segundo
-            tSimulador = new System.Timers.Timer(5000);
-            tSimulador.Elapsed += generadorCSV;
-            tSimulador.AutoReset = true;
-            tSimulador.Enabled = true;
-        }
-
-        private static void generadorCSV(Object source, ElapsedEventArgs e)
+        public static void generadorCSV()
         {
             int count = 0;
             while (true)
@@ -61,10 +54,14 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 }
 
                 count++;
+
+                var stopwatch = Stopwatch.StartNew();
+                Thread.Sleep(1000);
+                stopwatch.Stop();
             }
         }
 
-        private static void crearCSV(string cabecera, string detalle, string solicitud)
+        public static void crearCSV(string cabecera, string detalle, string solicitud)
         {
             List<string> contenido = new List<string>();
             string nombreCSV;
@@ -81,7 +78,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             }
 
         }
-        private static void datos()
+        public static void datos()
         {
             lsSOLI.Add("id;fecha;carrera;nombres;apellidos;identificación;modalidad_formación;semestre");
             lsSOLI.Add("00001;2019-06-06;ingenieria de sistemas;Juan;Marin;1444657485;presencial;7");
