@@ -1,21 +1,20 @@
 ﻿using System;
 using System.IO;
-using System.Timers;
 
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
     public class ProcesarColas
     {
-        private static Cola pilaAlta;
-        private static Cola pilaMedia;
-        private static Cola pilaBaja;
+        private static Cola colaAlta;
+        private static Cola colaMedia;
+        private static Cola colaBaja;
        
         public static void ProcesarColasPrioridades()
         {
-            pilaAlta = ArchivosCSV.colaAlta;
-            pilaMedia = ArchivosCSV.colaMedia;
-            pilaBaja = ArchivosCSV.colaBaja;
+            colaAlta = ArchivosCSV.colaAlta;
+            colaMedia = ArchivosCSV.colaMedia;
+            colaBaja = ArchivosCSV.colaBaja;
 
             /*cantidad de documentos a procesar segun cada prioridad*/
             int DocPrioridadAlta = 3;
@@ -26,10 +25,10 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 
                 if (DocPrioridadAlta > 0)
                 {
-                    /*se valida si la pilaAlta no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
-                    if (!pilaAlta.ColaVacia())
+                    /*se valida si la colaAlta no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
+                    if (!colaAlta.ColaVacia())
                     {
-                        guardarArchivos(pilaAlta.Descolar());
+                        guardarArchivos(colaAlta.Descolar());
                         Console.WriteLine("proceso documento prioridad alta");
                         DocPrioridadAlta--;
                     }
@@ -41,10 +40,10 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 }
                 else if (DocPrioridadMedia > 0)
                 {
-                    /*se valida si la pilaMedia no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
-                    if (!pilaMedia.ColaVacia())
+                    /*se valida si la colaMedia no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
+                    if (!colaMedia.ColaVacia())
                     {
-                        guardarArchivos(pilaMedia.Descolar());
+                        guardarArchivos(colaMedia.Descolar());
                         Console.WriteLine("proceso documento prioridad media");
                         DocPrioridadMedia--;
                     }
@@ -55,10 +54,10 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 }
                 else
                 {
-                    /*se valida si la pilaBaja no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
-                    if (!pilaBaja.ColaVacia())
+                    /*se valida si la colaBaja no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
+                    if (!colaBaja.ColaVacia())
                     {
-                        guardarArchivos(pilaBaja.Descolar());
+                        guardarArchivos(colaBaja.Descolar());
                         Console.WriteLine("proceso documento prioridad baja");
                     }
 
@@ -74,22 +73,18 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
             String tipoDocumento = can.Tipo_documento;
 
-            /*se debe crear variable nombre archivo que deberia tomarse del obj que este en la pila
-             y esta variable se utilizaria en donde se utiliza tipoDocumento para los nombres de los archivos*/
             String fechaCompleta = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
 
             /*---- Destino----*/
             String rutaDestino = @"../../Documentos\CarpetaDestino\OUT_" + tipoDocumento;
 
-            //String nombreDocumento = @"\XML_" + tipoDocumento + "_" + fechaCompleta + ".xml";
-
             /*se debe incluir en el canonico el nombre del archivo original csv...
              para prueba se agrega nombres...*/
-            String nombreDocumento = @"\XML_" + tipoDocumento+"_"+can.Nombres + "_" + fechaCompleta + ".xml";
+            String nombreDocumento = @"\XML_" + tipoDocumento+"_"+ fechaCompleta + ".xml";
 
             rutaDestino += nombreDocumento;
 
-            String documento = generarXml(can);
+            String documento = generarXmlCanonico(can);
 
             /*se guarda el documento en su carpeta correspondiente*/
             File.WriteAllText(rutaDestino, documento);
@@ -100,10 +95,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
             String rutaLog = @"../../Documentos\CarpetaDestino\OUT_LOG";
 
-            //String nombreDocumentoLog = @"\XML_" + tipoDocumento + "_" + fechaCompleta + ".txt";
-            /*se debe incluir en el canonico el nombre del archivo original csv...
-             para prueba se agrega nombres...*/
-            String nombreDocumentoLog = @"\XML_" + tipoDocumento +"_"+can.Nombres+ "_" + fechaCompleta + ".txt";
+            String nombreDocumentoLog = @"\XML_" + tipoDocumento +"_"+ fechaCompleta + ".txt";
             rutaLog += nombreDocumentoLog;
 
             String peso = pesoArchivo(rutaDestino);
@@ -116,7 +108,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
         }
 
-        public static String generarXml(Canonico can)
+        public static String generarXmlCanonico(Canonico can)
         {
 
             String texto =
@@ -162,7 +154,6 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 "Su peso es de: " + peso;
 
             return texto;
-
         }
 
         public static String pesoArchivo(String rutaDestino)
@@ -183,7 +174,6 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             {
                 peso /= 1024 / 1024; /*Mb*/
                 pesoArchivo = peso + " MB";
-
             }
 
             return pesoArchivo;
