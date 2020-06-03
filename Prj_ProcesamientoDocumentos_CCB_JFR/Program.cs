@@ -10,6 +10,8 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         static void Main(string[] args)
         {
 
+            Dosificador.simular();
+
             Thread hiloLectura = new Thread(new ThreadStart(leerArchivos));
             hiloLectura.Start();
             Thread.Sleep(10000);
@@ -24,10 +26,12 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         {
             while (true)
             {
-                procesoLectura = new System.Timers.Timer();
-                procesoLectura.Elapsed += ArchivosCSV.GenerarXML;
-                procesoLectura.AutoReset = true;
-                procesoLectura.Enabled = true;
+                
+                //procesoLectura = new System.Timers.Timer();
+                //procesoLectura.Elapsed += 
+                ArchivosCSV.GenerarXML();
+                //procesoLectura.AutoReset = true;
+                //procesoLectura.Enabled = true;
             }
             
         }
@@ -36,10 +40,11 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         {
             while (true)
             {
-                procesoProcesar = new System.Timers.Timer();
-                procesoProcesar.Elapsed += ProcesarColas.ProcesarColasPrioridades;
-                procesoProcesar.AutoReset = true;
-                procesoProcesar.Enabled = true;
+                //procesoProcesar = new System.Timers.Timer();
+                //procesoProcesar.Elapsed += 
+                    ProcesarColas.ProcesarColasPrioridades();
+                //procesoProcesar.AutoReset = true;
+                //procesoProcesar.Enabled = true;
             }
 
         }

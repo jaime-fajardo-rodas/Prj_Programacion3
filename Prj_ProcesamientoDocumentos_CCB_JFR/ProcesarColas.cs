@@ -11,7 +11,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         private static Cola pilaMedia;
         private static Cola pilaBaja;
        
-        public static void ProcesarColasPrioridades(Object source, ElapsedEventArgs e)
+        public static void ProcesarColasPrioridades()
         {
             pilaAlta = ArchivosCSV.colaAlta;
             pilaMedia = ArchivosCSV.colaMedia;

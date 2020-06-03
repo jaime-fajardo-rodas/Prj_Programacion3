@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Timers;
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
@@ -10,7 +12,7 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         public static Cola colaBaja = new Cola();
         public static Cola colaMedia = new Cola();
         public static Cola colaAlta = new Cola();
-        public static void GenerarXML(Object source, ElapsedEventArgs e)
+        public static void GenerarXML()
         {
 
             int contador = 0;
@@ -24,12 +26,13 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
             int namefiles = 0;
             
+
             foreach (var fi in direcCSV.GetFiles())
             {
-                
-                List<string> array_cabecera = new List<string>();
 
-                List<string> array_informacion = new List<string>();
+                ListaSimple.ListaEnlazadaSimple listCabecera = new ListaSimple.ListaEnlazadaSimple();
+
+                ListaSimple.ListaEnlazadaSimple listContenido = new ListaSimple.ListaEnlazadaSimple();
 
                 bool A1 = fi.Name.Contains("SOLI");
                 bool A2 = fi.Name.Contains("SOLCANMA");
@@ -65,11 +68,8 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
                 string estructura = "<" + etiqueta + "> \n";
 
-
-
                 System.IO.StreamReader file = new System.IO.StreamReader(direcCSV.FullName + fi.Name);
                 Console.WriteLine(direcCSV.FullName + fi.Name);
-
 
                 while ((line = file.ReadLine()) != null)
                 {
@@ -80,63 +80,59 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                     {
                         foreach (var cabecera in archivo)
                         {
-                            array_cabecera.Add(cabecera);
-                            Console.WriteLine(array_cabecera);
+                            listCabecera.AgregarElementoAlFinal(cabecera);
                         }
                     }
                     else
                     {
                         foreach (var contenido in archivo)
                         {
-                            array_informacion.Add(contenido);
-                            Console.WriteLine(array_informacion);
+                            listContenido.AgregarElementoAlFinal(contenido);
                         }
                     }
                 }
 
-                Console.WriteLine(String.Join(",", array_cabecera));
-                Console.WriteLine(String.Join(",", array_informacion));
+                listCabecera.imprimir();
+                listContenido.imprimir();
 
                 contador = 0;
                 file.Close();
-                string[] arryHead = array_cabecera.ToArray();
-                string[] arryBody = array_informacion.ToArray();
 
-
-                for (int xml = 0; xml < arryHead.Length; xml++)
+                for (int xml = 0; xml < listCabecera.CantidadElementos(); xml++)
                 {
-                    estructura += "\t<" + arryHead[xml] + ">" + arryBody[xml] + "</" + arryHead[xml] + "> \n";
+                    estructura += "\t<" + listCabecera.imprimirPosicion(xml) + ">" + listContenido.imprimirPosicion(xml) + "</" + listCabecera.imprimirPosicion(xml) + "> \n";
                 }
 
-                Canonico objetDocument = objetoCanonico(arryHead.Length, arryBody,etiqueta);
+                Canonico objetDocument = ObjetoCanonico(listCabecera.CantidadElementos(), listContenido, etiqueta);
 
                 estructura += "</" + etiqueta + "> ";
                 Console.WriteLine(estructura);
-                namefiles++;
 
+                namefiles++;
+                String fechaCompleta = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
                 if (A1)
                 {
-                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLI/" + etiqueta + ".xml", estructura);
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLI/" + etiqueta + fechaCompleta + ".xml", estructura);
                 }
                 else if (A2)
                 {
-                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCANMA/" + etiqueta + ".xml", estructura);
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCANMA/" + etiqueta + fechaCompleta + ".xml", estructura);
                 }
                 else if (A3)
                 {
-                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCREES/" + etiqueta + ".xml", estructura);
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCREES/" + etiqueta + fechaCompleta + ".xml", estructura);
                 }
                 else if (A4)
                 {
-                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLGRA/" + etiqueta + ".xml", estructura);
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLGRA/" + etiqueta + fechaCompleta + ".xml", estructura);
                 }
                 else if (A5)
                 {
-                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAAC/" + etiqueta + ".xml", estructura);
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAAC/" + etiqueta + fechaCompleta + ".xml", estructura);
                 }
                 else if (A6)
                 {
-                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAFI/" + namefiles + ".xml", estructura);
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAFI/" + namefiles + fechaCompleta + ".xml", estructura);
                 }
 
                 File.Delete(direcCSV.FullName + fi.Name);
@@ -144,61 +140,65 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 encolarPrioridad(objetDocument);
 
                 estructura = null;
-            }
 
+                var stopwatch = Stopwatch.StartNew();
+                Thread.Sleep(3000);
+                stopwatch.Stop();
+
+            }
         }
 
-        public static Canonico objetoCanonico(int columnas, string[] lista, string etiqueta)
+        public static Canonico ObjetoCanonico(int columnas, ListaSimple.ListaEnlazadaSimple lista, string etiqueta)
         {
             Canonico canonico = new Canonico();
 
             canonico.Tipo_documento = etiqueta;
-            canonico.Id = int.Parse(lista[0]);
-            canonico.Fecha = lista[1];
-            canonico.Carrera = lista[2];
-            canonico.Nombres = lista[3];
-            canonico.Apellidos = lista[4];
-            canonico.Identificacion = int.Parse(lista[5]);
+            canonico.Id = int.Parse(lista.imprimirPosicion(0));
+            canonico.Fecha = lista.imprimirPosicion(1);
+            canonico.Carrera = lista.imprimirPosicion(2);
+            canonico.Nombres = lista.imprimirPosicion(3);
+            canonico.Apellidos = lista.imprimirPosicion(4);
+            canonico.Identificacion = int.Parse(lista.imprimirPosicion(5));
 
             if (etiqueta.Equals("SOLI"))
             {
-                canonico.Modalidad = lista[6];
-                canonico.Semestre = lista[7];
+                canonico.Modalidad = lista.imprimirPosicion(6);
+                canonico.Semestre = lista.imprimirPosicion(7);
             }
             else if (etiqueta.Equals("SOLCANMA"))
             {
-                canonico.Motivo_cancelacion = lista[6];
+                canonico.Motivo_cancelacion = lista.imprimirPosicion(6);
             }
             else if (etiqueta.Equals("SOLCREES"))
             {
-                canonico.Celular = long.Parse(lista[6]);
-                canonico.Correo = lista[7];
-                canonico.Direccion = lista[8];
-                canonico.Edad = int.Parse(lista[9]);
-                canonico.Carnet = lista[10];
-                canonico.Jornada = lista[11];
-                canonico.Sede = lista[12];
+                canonico.Celular = long.Parse(lista.imprimirPosicion(6));
+                canonico.Correo = lista.imprimirPosicion(7);
+                canonico.Direccion = lista.imprimirPosicion(8);
+                canonico.Edad = int.Parse(lista.imprimirPosicion(9));
+                canonico.Carnet = lista.imprimirPosicion(10);
+                canonico.Jornada = lista.imprimirPosicion(11);
+                canonico.Sede = lista.imprimirPosicion(12);
             }
             else if (etiqueta.Equals("SOLGRA"))
             {
-                canonico.Tipo_graducacion = lista[6];
-                canonico.Historia_academica = lista[7];
-                canonico.Historico_notas = lista[8];
-                canonico.Pago_derechos = lista[9];
+                canonico.Tipo_graducacion = lista.imprimirPosicion(6);
+                canonico.Historia_academica = lista.imprimirPosicion(7);
+                canonico.Historico_notas = lista.imprimirPosicion(8);
+                canonico.Pago_derechos = lista.imprimirPosicion(9);
             }
             else if (etiqueta.Equals("SOLMAFI"))
             {
-                canonico.Forma_pago = lista[6];
-                canonico.Periodo_academico = lista[7];
-                canonico.Total_pagar = int.Parse(lista[8]);
-                canonico.Descuentos = int.Parse(lista[9]);
-                canonico.Total_liquidado = int.Parse(lista[10]);
+                canonico.Forma_pago = lista.imprimirPosicion(6);
+                canonico.Periodo_academico = lista.imprimirPosicion(7);
+                canonico.Total_pagar = int.Parse(lista.imprimirPosicion(8));
+                canonico.Descuentos = int.Parse(lista.imprimirPosicion(9));
+                canonico.Total_liquidado = int.Parse(lista.imprimirPosicion(10));
             }
             else if (etiqueta.Equals("SOLMAAC"))
             {
-                canonico.Materias = lista[6];
-                canonico.Docentes = lista[7];
-                canonico.Horario = lista[8];
+                canonico.Materias = lista.imprimirPosicion(6);
+                canonico.Docentes = lista.imprimirPosicion(7);
+                canonico.Horario = lista.imprimirPosicion(8);
             }
             
             return canonico;

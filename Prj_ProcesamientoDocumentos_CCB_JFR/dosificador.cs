@@ -21,9 +21,6 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         {
             datos();
 
-            Console.WriteLine("Ruta: " + rutaComun);
-            Console.ReadLine();
-
             // Temporizador con intervalo de 1 segundo
             tSimulador = new System.Timers.Timer(5000);
             tSimulador.Elapsed += generadorCSV;
@@ -33,30 +30,37 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
         private static void generadorCSV(Object source, ElapsedEventArgs e)
         {
-            Random aleatorio = new Random();
-            int fila = aleatorio.Next(1, 2);
-            int solicitud = aleatorio.Next(1, 7);
-
-            switch (solicitud)
+            int count = 0;
+            while (true)
             {
-                case 1:
-                    crearCSV(lsSOLI[0], lsSOLI[fila], "SOLI");
-                    break;
-                case 2:
-                    crearCSV(lsSOLMAFI[0], lsSOLMAFI[fila], "SOLMAFI");
-                    break;
-                case 3:
-                    crearCSV(lsSOLMAAC[0], lsSOLMAAC[fila], "SOLMAAC");
-                    break;
-                case 4:
-                    crearCSV(lsSOLGRA[0], lsSOLGRA[fila], "SOLGRA");
-                    break;
-                case 5:
-                    crearCSV(lsSOLCREES[0], lsSOLCREES[fila], "SOLCREES");
-                    break;
-                default:
-                    crearCSV(lsSOLCANMA[0], lsSOLCANMA[fila], "SOLCANMA");
-                    break;
+                
+                Random aleatorio = new Random();
+                int fila = aleatorio.Next(1, 2);
+                int solicitud = aleatorio.Next(1, 7);
+
+                switch (solicitud)
+                {
+                    case 1:
+                        crearCSV(lsSOLI[0], lsSOLI[fila], "SOLI" + count);
+                        break;
+                    case 2:
+                        crearCSV(lsSOLMAFI[0], lsSOLMAFI[fila], "SOLMAFI" + count);
+                        break;
+                    case 3:
+                        crearCSV(lsSOLMAAC[0], lsSOLMAAC[fila], "SOLMAAC" + count);
+                        break;
+                    case 4:
+                        crearCSV(lsSOLGRA[0], lsSOLGRA[fila], "SOLGRA" + count);
+                        break;
+                    case 5:
+                        crearCSV(lsSOLCREES[0], lsSOLCREES[fila], "SOLCREES" + count);
+                        break;
+                    default:
+                        crearCSV(lsSOLCANMA[0], lsSOLCANMA[fila], "SOLCANMA" + count);
+                        break;
+                }
+
+                count++;
             }
         }
 
