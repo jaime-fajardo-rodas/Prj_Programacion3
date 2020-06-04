@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Timers;
 
 namespace Prj_ProcesamientoDocumentos_CCB_JFR
 {
@@ -31,128 +29,131 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
 
             string oldFile = NewestFileofDirectory(rutaCSV);
 
-            //foreach (var fi in direcCSV.GetFiles())
-            //{
-            FileInfo fi = new FileInfo(rutaCSV+oldFile);
-           
-                    ListaSimple.ListaEnlazadaSimple listCabecera = new ListaSimple.ListaEnlazadaSimple();
+            var stopwatch = Stopwatch.StartNew();
+            Thread.Sleep(1000);
+            stopwatch.Stop();
 
-                    ListaSimple.ListaEnlazadaSimple listContenido = new ListaSimple.ListaEnlazadaSimple();
+            if (!oldFile.Equals(""))
+            {
 
-                    bool A1 = fi.Name.Contains("SOLI");
-                    bool A2 = fi.Name.Contains("SOLCANMA");
-                    bool A3 = fi.Name.Contains("SOLCREES");
-                    bool A4 = fi.Name.Contains("SOLGRA");
-                    bool A5 = fi.Name.Contains("SOLMAAC");
-                    bool A6 = fi.Name.Contains("SOLMAFI");
+                FileInfo fi = new FileInfo(rutaCSV + oldFile);
 
-                    if (A1)
-                    {
-                        etiqueta = "SOLI";
-                    }
-                    else if (A2)
-                    {
-                        etiqueta = "SOLCANMA";
-                    }
-                    else if (A3)
-                    {
-                        etiqueta = "SOLCREES";
-                    }
-                    else if (A4)
-                    {
-                        etiqueta = "SOLGRA";
-                    }
-                    else if (A5)
-                    {
-                        etiqueta = "SOLMAAC";
-                    }
-                    else if (A6)
-                    {
-                        etiqueta = "SOLMAFI";
-                    }
 
-                    string estructura = "<" + etiqueta + "> \n";
 
-                    System.IO.StreamReader file = new System.IO.StreamReader(direcCSV.FullName + fi.Name);
-                    Console.WriteLine(direcCSV.FullName + fi.Name);
+                ListaSimple.ListaEnlazadaSimple listCabecera = new ListaSimple.ListaEnlazadaSimple();
 
-                    while ((line = file.ReadLine()) != null)
+                ListaSimple.ListaEnlazadaSimple listContenido = new ListaSimple.ListaEnlazadaSimple();
+
+                bool A1 = fi.Name.Contains("SOLI");
+                bool A2 = fi.Name.Contains("SOLCANMA");
+                bool A3 = fi.Name.Contains("SOLCREES");
+                bool A4 = fi.Name.Contains("SOLGRA");
+                bool A5 = fi.Name.Contains("SOLMAAC");
+                bool A6 = fi.Name.Contains("SOLMAFI");
+
+                if (A1)
+                {
+                    etiqueta = "SOLI";
+                }
+                else if (A2)
+                {
+                    etiqueta = "SOLCANMA";
+                }
+                else if (A3)
+                {
+                    etiqueta = "SOLCREES";
+                }
+                else if (A4)
+                {
+                    etiqueta = "SOLGRA";
+                }
+                else if (A5)
+                {
+                    etiqueta = "SOLMAAC";
+                }
+                else if (A6)
+                {
+                    etiqueta = "SOLMAFI";
+                }
+
+                string estructura = "<" + etiqueta + "> \n";
+
+                System.IO.StreamReader file = new System.IO.StreamReader(direcCSV.FullName + fi.Name);
+                //Console.WriteLine(direcCSV.FullName + fi.Name);
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    contador++;
+
+                    var archivo = line.Split(';');
+                    if (contador == 1)
                     {
-                        contador++;
-
-                        var archivo = line.Split(';');
-                        if (contador == 1)
+                        foreach (var cabecera in archivo)
                         {
-                            foreach (var cabecera in archivo)
-                            {
-                                listCabecera.AgregarElementoAlFinal(cabecera);
-                            }
+                            listCabecera.AgregarElementoAlFinal(cabecera);
                         }
-                        else
+                    }
+                    else
+                    {
+                        foreach (var contenido in archivo)
                         {
-                            foreach (var contenido in archivo)
-                            {
-                                listContenido.AgregarElementoAlFinal(contenido);
-                            }
+                            listContenido.AgregarElementoAlFinal(contenido);
                         }
                     }
+                }
 
-                    listCabecera.imprimir();
-                    listContenido.imprimir();
+                contador = 0;
+                file.Close();
 
-                    contador = 0;
-                    file.Close();
+                for (int xml = 0; xml < listCabecera.CantidadElementos(); xml++)
+                {
+                    estructura += "\t<" + listCabecera.imprimirPosicion(xml) + ">" + listContenido.imprimirPosicion(xml) + "</" + listCabecera.imprimirPosicion(xml) + "> \n";
+                }
 
-                    for (int xml = 0; xml < listCabecera.CantidadElementos(); xml++)
-                    {
-                        estructura += "\t<" + listCabecera.imprimirPosicion(xml) + ">" + listContenido.imprimirPosicion(xml) + "</" + listCabecera.imprimirPosicion(xml) + "> \n";
-                    }
+                Canonico objetDocument = ObjetoCanonico(listCabecera.CantidadElementos(), listContenido, etiqueta);
 
-                    Canonico objetDocument = ObjetoCanonico(listCabecera.CantidadElementos(), listContenido, etiqueta);
+                estructura += "</" + etiqueta + "> ";
+                //Console.WriteLine(estructura);
 
-                    estructura += "</" + etiqueta + "> ";
-                    Console.WriteLine(estructura);
+                namefiles++;
+                String fechaCompleta = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
+                if (A1)
+                {
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLI/" + etiqueta + fechaCompleta + ".xml", estructura);
+                }
+                else if (A2)
+                {
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCANMA/" + etiqueta + fechaCompleta + ".xml", estructura);
+                }
+                else if (A3)
+                {
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCREES/" + etiqueta + fechaCompleta + ".xml", estructura);
+                }
+                else if (A4)
+                {
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLGRA/" + etiqueta + fechaCompleta + ".xml", estructura);
+                }
+                else if (A5)
+                {
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAAC/" + etiqueta + fechaCompleta + ".xml", estructura);
+                }
+                else if (A6)
+                {
+                    System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAFI/" + namefiles + fechaCompleta + ".xml", estructura);
+                }
 
-                    namefiles++;
-                    String fechaCompleta = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
-                    if (A1)
-                    {
-                        System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLI/" + etiqueta + fechaCompleta + ".xml", estructura);
-                    }
-                    else if (A2)
-                    {
-                        System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCANMA/" + etiqueta + fechaCompleta + ".xml", estructura);
-                    }
-                    else if (A3)
-                    {
-                        System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLCREES/" + etiqueta + fechaCompleta + ".xml", estructura);
-                    }
-                    else if (A4)
-                    {
-                        System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLGRA/" + etiqueta + fechaCompleta + ".xml", estructura);
-                    }
-                    else if (A5)
-                    {
-                        System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAAC/" + etiqueta + fechaCompleta + ".xml", estructura);
-                    }
-                    else if (A6)
-                    {
-                        System.IO.File.WriteAllText(direcXML.FullName + "XML_SOLMAFI/" + namefiles + fechaCompleta + ".xml", estructura);
-                    }
+                File.Delete(direcCSV.FullName + fi.Name);
 
-                    File.Delete(direcCSV.FullName + fi.Name);
+                encolarPrioridad(objetDocument);
 
-                    encolarPrioridad(objetDocument);
-
-                    estructura = null;
-
-                    var stopwatch = Stopwatch.StartNew();
-                    Thread.Sleep(1000);
-                    stopwatch.Stop();
+                estructura = null;
 
                 
 
-            //}
+            }
+
+            
+
         }
 
         public static Canonico ObjetoCanonico(int columnas, ListaSimple.ListaEnlazadaSimple lista, string etiqueta)
@@ -237,18 +238,26 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                 return null;
 
             FileInfo[] files = directoryInfo.GetFiles();
-            DateTime recentWrite = DateTime.MinValue;
+            DateTime recentWrite = DateTime.MaxValue;
             FileInfo recentFile = null;
 
             foreach (FileInfo file in files)
             {
-                if (file.LastWriteTime > recentWrite)
+                if (file.LastWriteTime < recentWrite)
                 {
                     recentWrite = file.LastWriteTime;
                     recentFile = file;
                 }
             }
-            return recentFile.Name;
+
+            if (recentFile == null)
+            {
+                return "";
+            }
+            else
+            {
+                return recentFile.Name;
+            }
         }
 
     }

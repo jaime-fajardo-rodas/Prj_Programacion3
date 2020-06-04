@@ -20,16 +20,21 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
             int DocPrioridadAlta = 3;
             int DocPrioridadMedia = 2;
 
+            String countAlta = "Alta: ";
+            String countBaja = "Baja: ";
+            String countMedia = "Media: ";
+
             while (true)
             {
-                
                 if (DocPrioridadAlta > 0)
                 {
                     /*se valida si la colaAlta no esta vacia para procesar, si no se pasa a la siguiente prioridad*/
                     if (!colaAlta.ColaVacia())
                     {
                         guardarArchivos(colaAlta.Descolar());
-                        Console.WriteLine("proceso documento prioridad alta");
+                        //Console.WriteLine("proceso documento prioridad alta");
+                        countAlta += " |";
+                        Console.WriteLine(countAlta);
                         DocPrioridadAlta--;
                     }
                     else
@@ -44,7 +49,9 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                     if (!colaMedia.ColaVacia())
                     {
                         guardarArchivos(colaMedia.Descolar());
-                        Console.WriteLine("proceso documento prioridad media");
+                        //Console.WriteLine("proceso documento prioridad media");
+                        countMedia += " |";
+                        Console.WriteLine(countMedia);
                         DocPrioridadMedia--;
                     }
                     else
@@ -58,7 +65,9 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
                     if (!colaBaja.ColaVacia())
                     {
                         guardarArchivos(colaBaja.Descolar());
-                        Console.WriteLine("proceso documento prioridad baja");
+                        //Console.WriteLine("proceso documento prioridad baja");
+                        countBaja += " |";
+                        Console.WriteLine(countBaja);
                     }
 
                     DocPrioridadAlta = 3;

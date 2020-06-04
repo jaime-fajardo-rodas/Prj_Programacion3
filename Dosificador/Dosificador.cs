@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO; //File
+using System.IO;
 using System.Threading;
-using System.Timers; //ElapsedEventArgs, Timer
 
-namespace Prj_ProcesamientoDocumentos_CCB_JFR
+namespace Dosificador
 {
-    public class Dosificador
+    class Dosificador
     {
-        static DirectoryInfo direcCSV = new DirectoryInfo("./../../Documentos/CarpetaComun/");
+        static DirectoryInfo direcCSV = new DirectoryInfo("./../../../Prj_ProcesamientoDocumentos_CCB_JFR/Documentos/CarpetaComun/");
         static string rutaComun = direcCSV.FullName;
-        
+
         static List<string> lsSOLI = new List<string>();
         static List<string> lsSOLMAFI = new List<string>();
         static List<string> lsSOLMAAC = new List<string>();
@@ -19,14 +18,15 @@ namespace Prj_ProcesamientoDocumentos_CCB_JFR
         static List<string> lsSOLCREES = new List<string>();
         static List<string> lsSOLCANMA = new List<string>();
         static System.Timers.Timer tSimulador;
-        
+
 
         public static void generadorCSV()
         {
+            Console.WriteLine("rutaaa --->>> " + direcCSV.FullName);
             int count = 0;
             while (true)
             {
-                
+
                 Random aleatorio = new Random();
                 int fila = aleatorio.Next(1, 2);
                 int solicitud = aleatorio.Next(1, 7);

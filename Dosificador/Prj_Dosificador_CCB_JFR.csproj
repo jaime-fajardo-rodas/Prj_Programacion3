@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{49369AAF-DD99-4FE4-AA77-21333C1BEB25}</ProjectGuid>
+    <ProjectGuid>{DDBE219B-B184-467F-A2EF-AAAA40B61EA2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Prj_ProcesamientoDocumentos_CCB_JFR</RootNamespace>
-    <AssemblyName>Prj_ProcesamientoDocumentos_CCB_JFR</AssemblyName>
+    <RootNamespace>Dosificador</RootNamespace>
+    <AssemblyName>Dosificador</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,12 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchivosCSV.cs" />
-    <Compile Include="Canonico.cs" />
-    <Compile Include="Cola.cs" />
-    <Compile Include="ListaEnlazada.cs" />
-    <Compile Include="ListaSimple.cs" />
-    <Compile Include="ProcesarColas.cs" />
+    <Compile Include="Dosificador.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
